@@ -20,4 +20,10 @@ Up gamma
 
 change display ratio (4:3 options aswell as 16:9)
 
+How To Use:
+
+Drag the .bat File into a sperate folder and run it. Everything else is explained while running.
+
 ![redmconfig](https://github.com/mwFrozenDEV/redm-gambify/assets/174497893/6ac48bc9-a2fd-4518-80bd-212225c80c4d)
+![editor](https://github.com/mwFrozenDEV/redm-gambify/assets/174497893/a6d1f9d0-78f0-4466-b7bb-b976e10637e2)
+![config](https://github.com/mwFrozenDEV/redm-gambify/assets/174497893/78fb03e9-c816-4b95-ba57-7b074cb9c812)
