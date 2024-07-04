@@ -40,13 +40,15 @@ if not exist "%config%" (
     echo                   1. create custom RedM config
     echo                   2. swap RedM config
     echo                   3. initial config
-    echo                   4. exit
+    echo                   4. show current config
+    echo                   0. exit
     echo                   ============================================================================
-    set /p choice="choose (1-4): "
+    set /p choice="choose: "
         if "!choice!"=="1" goto create_custom_redm_config
         if "!choice!"=="2" goto swap_redm_config
         if "!choice!"=="3" goto initial_configuration
-        if "!choice!"=="4" goto exiting
+        if "!choice!"=="4" goto displaycurrentconfig
+        if "!choice!"=="0" goto exiting
     pause
 
     :create_custom_redm_config
@@ -110,6 +112,7 @@ if not exist "%config%" (
     echo \ 0. Back to menu
     echo \
     echo ===================================
+    :choose_again
     set /p choice="choose (1-4): "
         if "!choice!"=="1" goto change_settings_to_low
         if "!choice!"=="2" goto disable_grass
@@ -118,11 +121,85 @@ if not exist "%config%" (
         if "!choice!"=="0" goto main_menu                    
 
     :change_settings_to_low
-    pause
+    set tempPSScript="%TEMP%\temp_script.ps1"
+    attrib -r "!exchange_folder_path!\%filename%"
+    echo [XML]$xmlDoc = Get-Content -Path "!exchange_folder_path!\%filename%" > "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.graphics.tessellation = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.graphics.shadowQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.graphics.farShadowQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.graphics.reflectionQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.graphics.mirrorQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.graphics.ssao = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.graphics.textureQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.graphics.particleQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.graphics.waterQuality = 'kSettingLevel_Custom' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.graphics.volumetricsQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.graphics.lightingQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.graphics.ambientLightingQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.graphics.taa = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.graphics.graphicsQualityPreset.value = "0.000000" >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.shadowSoftShadows = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.particleLightingQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.waterRefractionQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.waterReflectionQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.waterSimulationQuality.value = "0" >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.waterLightingQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.shadowGrassShadows = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $shadowParticleShadowsNode = $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.shadowParticleShadows >> "!tempPSScript!"
+    echo if ($shadowParticleShadowsNode) { $shadowParticleShadowsNode.value = 'false' } >> "!tempPSScript!"
+    echo $shadowLongShadowsNode = $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.shadowLongShadowsNode >> "!tempPSScript!"
+    echo if ($shadowLongShadowsNode) { $shadowLongShadowsNode.value = 'false' } >> "!tempPSScript!"
+    echo $worldHeightShadowQualityNode = $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.worldHeightShadowQualityNode >> "!tempPSScript!"
+    echo if ($worldHeightShadowQualityNode) { $worldHeightShadowQualityNode.value = '0.000000' } >> "!tempPSScript!"
+    echo $directionalScreenSpaceShadowQualityNode = $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.directionalScreenSpaceShadowQuality >> "!tempPSScript!"
+    echo if ($directionalScreenSpaceShadowQualityNode) { $directionalScreenSpaceShadowQualityNode.value = '0.000000' } >> "!tempPSScript!"
+    echo $ambientMaskVolumesHighPrecisionNode = $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.ambientMaskVolumesHighPrecision >> "!tempPSScript!"
+    echo if ($ambientMaskVolumesHighPrecisionNode) { $ambientMaskVolumesHighPrecisionNode.value = 'false' } >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.scatteringVolumeQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.volumetricsRaymarchQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.volumetricsLightingQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.terrainShadowQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.decalQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.POMQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.lodScale.value = "0.750000" >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.sharpenIntensity.value = "0.000000" >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.treeQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.deepsurfaceQuality = 'kSettingLevel_Low' >> "!tempPSScript!"
+    echo $xmlDoc.Save("!exchange_folder_path!\%filename%") >> "!tempPSScript!"
+    powershell -ExecutionPolicy Bypass -File "!tempPSScript!"
+    del "!tempPSScript!"
+    attrib +r "!exchange_folder_path!\%filename%"
+    echo \ Successfully changed settings to low.
+    goto :choose_again
+    
     :disable_grass
-    pause
+    attrib -r "!exchange_folder_path!\%filename%"
+    set tempPSScript="%TEMP%\temp_script.ps1"
+    set "newGrassLod=0.000000"
+    echo [XML]$xmlDoc = Get-Content -Path "!exchange_folder_path!\%filename%" > "!tempPSScript!"
+    echo $grassLodNode = $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.grassLod >> "!tempPSScript!"
+    echo if ($grassLodNode) { $grassLodNode.value = '%newGrassLod%' } >> "!tempPSScript!"
+    echo $xmlDoc.Save("!exchange_folder_path!\%filename%") >> "!tempPSScript!"
+    powershell -ExecutionPolicy Bypass -File "!tempPSScript!"
+    del "!tempPSScript!"
+    attrib +r "!exchange_folder_path!\%filename%"
+    echo \ Successfully removed grass.
+    goto :choose_again
+
     :up_gamma
-    pause
+    attrib -r "!exchange_folder_path!\%filename%"
+    set tempPSScript="%TEMP%\temp_script.ps1"
+    set "newGamma=60"
+    echo [XML]$xmlDoc = Get-Content -Path "!exchange_folder_path!\%filename%" > "!tempPSScript!"
+    echo $gammaNode = $xmlDoc.rage__fwuiSystemSettingsCollection.graphics.gamma >> "!tempPSScript!"
+    echo if ($gammaNode) { $gammaNode.value = '%newGamma%' } >> "!tempPSScript!"
+    echo $xmlDoc.Save("!exchange_folder_path!\%filename%") >> "!tempPSScript!"
+    powershell -ExecutionPolicy Bypass -File "!tempPSScript!"
+    del "!tempPSScript!"
+    attrib +r "!exchange_folder_path!\%filename%"
+    echo \ Successfully upped gamma.
+    goto :choose_again
+
     :change_display_ratio
     pause
 
@@ -294,9 +371,10 @@ if not exist "%config%" (
 )
 
 :finish_initial_config
-    cls
     color 0A
     call :write_config
+    :displaycurrentconfig
+    cls
     echo   .d8888b.   .d88888b.  888b    888 8888888888 8888888 .d8888b.  
     echo  d88P  Y88b d88P" "Y88b 8888b   888 888          888  d88P  Y88b 
     echo  888    888 888     888 88888b  888 888          888  888    888 
