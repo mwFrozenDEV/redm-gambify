@@ -1,5 +1,6 @@
 
-![mwFrozenGambify](https://github.com/mwFrozenDEV/redm-gambify/assets/174497893/420837d0-f014-4a53-9272-1ff0f464c8f4)
+
+![Gambify](https://github.com/mwFrozenDEV/redm-gambify/assets/174497893/7cee4735-24f3-4d1c-b568-2e94431f74f6)
 
 
 A .bat Script that will create your own custom RedM settings/system.xml file. 
