@@ -48,7 +48,7 @@ if not exist "%config%" (
         if "!choice!"=="2" goto swap_redm_config
         if "!choice!"=="3" goto initial_configuration
         if "!choice!"=="4" goto displaycurrentconfig
-        if "!choice!"=="0" goto exiting
+        if "!choice!"=="0" ( goto exiting ) else ( goto :main_menu )
     pause
 
     :create_custom_redm_config
@@ -118,7 +118,7 @@ if not exist "%config%" (
         if "!choice!"=="2" goto disable_grass
         if "!choice!"=="3" goto up_gamma
         if "!choice!"=="4" goto change_display_ratio       
-        if "!choice!"=="0" goto main_menu                    
+        if "!choice!"=="0" ( goto main_menu ) else ( goto :config_editor )                    
 
     :change_settings_to_low
     set tempPSScript="%TEMP%\temp_script.ps1"
@@ -201,7 +201,63 @@ if not exist "%config%" (
     goto :choose_again
 
     :change_display_ratio
+    cls
+    set "validInput=0"
+    echo ===================================
+    echo \
+    echo \ choose a display ratio:
+    echo \
+    echo ==============
+    echo \ 4:3 stretched ratios:
+    echo \ 1. 1024x768
+    echo \ 2. 1600x1200
+    echo ==============
+    echo \ 16:9 ratios:
+    echo \ 3. 1280x720
+    echo \ 4. 1920x1080
+    echo ==============
+    set /p choice="choose: "
+    if "!choice!"=="1" ( 
+        set "width=1024"
+        set "height=768"
+        set "validInput=1"
+    )
+    if "!choice!"=="2" ( 
+        set "width=1600"
+        set "height=1200"
+        set "validInput=1"
+    )
+    if "!choice!"=="3" ( 
+        set "width=1280"
+        set "height=720"
+        set "validInput=1"
+    )
+    if "!choice!"=="4" (
+        set "width=1920"
+        set "height=1080"
+        set "validInput=1"
+    ) 
+
+    if "!validInput!"=="0" goto :change_display_ratio
+
+    attrib -r "!exchange_folder_path!\%filename%"
+    set tempPSScript=%TEMP%\temp_script.ps1
+    echo [XML]$xmlDoc = Get-Content -Path "!exchange_folder_path!\%filename%" > "!tempPSScript!"
+    echo $screenWidthNode = $xmlDoc.rage__fwuiSystemSettingsCollection.video.screenWidth >> "!tempPSScript!"
+    echo if ($screenWidthNode) { $screenWidthNode.value = '!width!' } >> "!tempPSScript!"
+    echo $screenHeightNode = $xmlDoc.rage__fwuiSystemSettingsCollection.video.screenHeight >> "!tempPSScript!"
+    echo if ($screenHeightNode) { $screenHeightNode.value = '!height!' } >> "!tempPSScript!"
+    echo $screenWidthWindowedNode = $xmlDoc.rage__fwuiSystemSettingsCollection.video.screenWidthWindowed >> "!tempPSScript!"
+    echo if ($screenWidthWindowedNode) { $screenWidthWindowedNode.value = '!width!' } >> "!tempPSScript!"
+    echo $screenHeightWindowedNode = $xmlDoc.rage__fwuiSystemSettingsCollection.video.screenHeightWindowed >> "!tempPSScript!"
+    echo if ($screenHeightWindowedNode) { $screenHeightWindowedNode.value = '!height!' } >> "!tempPSScript!"
+    echo $xmlDoc.Save("!exchange_folder_path!\%filename%") >> "!tempPSScript!"
+    powershell -ExecutionPolicy Bypass -File "!tempPSScript!"
+    del "!tempPSScript!"
+    attrib +r "!exchange_folder_path!\%filename%"
+    echo Successfully changed resolution to !width! x !height!.
     pause
+    goto :config_editor
 
     :swap_redm_config
     cls
@@ -368,7 +424,7 @@ if not exist "%config%" (
         pause
         call :write_config
     )
-)
+
 
 :finish_initial_config
     color 0A
