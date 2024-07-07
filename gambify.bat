@@ -210,12 +210,13 @@ if not exist "%config%" (
     echo ==============
     echo \ 4:3 stretched ratios:
     echo \ 1. 1024x768
-    echo \ 2. 1600x1200
+    echo \ 2. 1440x1080
     echo ==============
     echo \ 16:9 ratios:
     echo \ 3. 1280x720
     echo \ 4. 1920x1080
     echo ==============
+    echo \ 0. back to editor 
     set /p choice="choose: "
     if "!choice!"=="1" ( 
         set "width=1024"
@@ -223,8 +224,8 @@ if not exist "%config%" (
         set "validInput=1"
     )
     if "!choice!"=="2" ( 
-        set "width=1600"
-        set "height=1200"
+        set "width=1440"
+        set "height=1080"
         set "validInput=1"
     )
     if "!choice!"=="3" ( 
@@ -237,6 +238,10 @@ if not exist "%config%" (
         set "height=1080"
         set "validInput=1"
     ) 
+
+    if "!choice!"=="0" (
+        goto :config_editor
+    )
 
     if "!validInput!"=="0" goto :change_display_ratio
 
