@@ -36,6 +36,7 @@ if not exist "%config%" (
     echo                     +#+   +#+# +#+     +#+ +#+       +#+ +#+    +#+    +#+     +#+           +#+        
     echo                    #+#    #+# #+#     #+# #+#       #+# #+#    #+#    #+#     #+#           #+#         
     echo                    ########  ###     ### ###       ### ######### ########### ###           ###          
+    call :print_what_config
     echo                   ============================================================================
     echo                   1. create custom RedM config
     echo                   2. swap RedM config
@@ -76,13 +77,13 @@ if not exist "%config%" (
     echo \
     if exist "!exchange_folder_path!\%filename%" (
         goto :config_editor
-    ) 
-     else (
+    ) else (
         copy "!redm_config_path!\%filename%" "!exchange_folder_path!\%filename%" >nul
         if %errorlevel% equ 0 (
             echo \
             echo \ copied !redm_config_path!\%filename%.
             echo \
+            call :sign_alt_config
             goto :config_editor
         ) else (
             color 40
@@ -525,6 +526,33 @@ if "!isError!"=="1" (
 ) else (
     goto :verified_sysxml
 )
+
+:sign_alt_config
+attrib -r "!exchange_folder_path!\%filename%"
+powershell "$xmlFilePath='!exchange_folder_path!\%filename%'; $xml = [xml](Get-Content $xmlFilePath);$commentText='Alternative Config';$secondNode=$xml.DocumentElement.ChildNodes[1];$comment = $xml.CreateComment($commentText); $xml.DocumentElement.InsertBefore($comment, $secondNode);$xml.Save($xmlFilePath);" >nul
+attrib +r "!exchange_folder_path!\%filename%"
+goto :eof
+
+:print_what_config
+call :read_alt_config
+if "!is_Alt_Config!"=="1" (
+    echo                   Current Config: Alternative Config
+) else (
+    echo                   Current Config: Main Config
+)
+
+:read_alt_config
+REM sets is_Alt_Config to 1 or 0 
+findstr /C:"<^!--Alternative Config-->" !redm_config_path!\%filename% >Nul
+if %errorlevel%==0 (
+REM found
+set is_Alt_Config=1
+)
+if %errorlevel%==1 (
+REM not found
+set is_Alt_Config=0
+)
+goto :eof
 
 :create_desktop_shortcut
 set "iconURL=https://raw.githubusercontent.com/mwFrozenDEV/redm-gambify/main/gambify.ico"
