@@ -556,10 +556,31 @@ goto :eof
 
 :create_desktop_shortcut
 set "iconURL=https://raw.githubusercontent.com/mwFrozenDEV/redm-gambify/main/gambify.ico"
-powershell -Command "Invoke-WebRequest -Uri '!iconURL!' -OutFile '%~dp0\gambify.ico'
+if not exist "%~dp0\gambify.ico" ( 
+    powershell -Command "Invoke-WebRequest -Uri '!iconURL!' -OutFile '%~dp0\gambify.ico'
+)
 powershell "$s=(New-Object -COM WScript.Shell).CreateShortcut('%userprofile%\Desktop\Gambify.lnk');$s.TargetPath='%~f0';$s.WorkingDirectory='%~dp0';$s.IconLocation='%~dp0gambify.ico';$s.Save()"
-echo Desktop Shortcut created.
-pause
-goto :main_menu
+echo                   Desktop Shortcut created.
+echo                   Create Start Menu Shortcut aswell? requires administrative privileges
+echo                   1. yes
+echo                   2. no
+:try_again_choice
+set /p choice="choose: "
+    if "!choice!"=="1" (
+        set tempPSScript="%TEMP%\temp_script.ps1"
+        echo $s=^(New-Object -COM WScript.Shell^).CreateShortcut^('%ProgramData%\Microsoft\Windows\Start Menu\Programs\Gambify.lnk'^); > !tempPSScript!
+        echo $s.TargetPath='%~f0'; >> !tempPSScript!
+        echo $s.WorkingDirectory='%~dp0'; >> !tempPSScript!
+        echo $s.IconLocation='%~dp0gambify.ico'; >> !tempPSScript!
+        echo $s.Save^(^) >> !tempPSScript!
+        powershell -Command "Start-Process powershell -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File !tempPSScript!' -Verb RunAs"
+        echo                   Start Menu Shortcut created.
+        goto :main_menu
+    )
+    if "!choice!"=="2" ( 
+        goto :main_menu
+    ) else (
+        goto :try_again_choice
+    )
 
 
