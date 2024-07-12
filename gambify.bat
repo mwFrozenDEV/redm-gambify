@@ -41,6 +41,7 @@ if not exist "%config%" (
     echo                   2. swap RedM config
     echo                   3. initial config
     echo                   4. show current config
+    echo                   5. create desktop shortcut
     echo                   0. exit
     echo                   ============================================================================
     set /p choice="choose: "
@@ -48,6 +49,7 @@ if not exist "%config%" (
         if "!choice!"=="2" goto swap_redm_config
         if "!choice!"=="3" goto initial_configuration
         if "!choice!"=="4" goto displaycurrentconfig
+        if "!choice!"=="5" goto create_desktop_shortcut
         if "!choice!"=="0" ( goto exiting ) else ( goto :main_menu )
     pause
 
@@ -523,4 +525,13 @@ if "!isError!"=="1" (
 ) else (
     goto :verified_sysxml
 )
+
+:create_desktop_shortcut
+set "iconURL=https://raw.githubusercontent.com/mwFrozenDEV/redm-gambify/main/gambify.ico"
+powershell -Command "Invoke-WebRequest -Uri '!iconURL!' -OutFile '%~dp0\gambify.ico'
+powershell "$s=(New-Object -COM WScript.Shell).CreateShortcut('%userprofile%\Desktop\Gambify.lnk');$s.TargetPath='%~f0';$s.WorkingDirectory='%~dp0';$s.IconLocation='%~dp0gambify.ico';$s.Save()"
+echo Desktop Shortcut created.
+pause
+goto :main_menu
+
 
