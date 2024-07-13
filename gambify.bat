@@ -121,7 +121,7 @@ if not exist "%config%" (
     echo ===================================
     :choose_again
     set choice="0"
-    set /p choice="choose (1-4): "
+    set /p choice="choose (1-7): "
         if "!choice!"=="1" goto change_settings_to_low
         if "!choice!"=="2" goto disable_grass
         if "!choice!"=="3" goto up_gamma
