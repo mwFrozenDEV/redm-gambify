@@ -18,12 +18,10 @@ Integrated RedM Config Editor. (Main Menu -> 1)
 
 You can quickly swap between 2 different configs using this tool. (Main Menu -> 2)
 
-Go through initial configuration for the file paths (Main Menu -> 3)
+Go through initial configuration for the file paths. (Main Menu -> 3)
 
-Show current configuration for the file paths (Main Menu -> 4)
+Show current configuration for the file paths. (Main Menu -> 4)
 
-Create a Shortcut on your Desktop with a custom made logo (Main Menu -> 5)
+Create a Shortcut on your Desktop and optionally in the Start Menu with a custom made logo. (Main Menu -> 5)
 
-![redmconfig](https://github.com/mwFrozenDEV/redm-gambify/assets/174497893/6ac48bc9-a2fd-4518-80bd-212225c80c4d)
-![editor](https://github.com/mwFrozenDEV/redm-gambify/assets/174497893/a6d1f9d0-78f0-4466-b7bb-b976e10637e2)
-![config](https://github.com/mwFrozenDEV/redm-gambify/assets/174497893/78fb03e9-c816-4b95-ba57-7b074cb9c812)
+![fpsdif](https://github.com/user-attachments/assets/260dc698-cd52-421a-b6e9-2cb30fd568bd)
