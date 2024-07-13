@@ -6,7 +6,7 @@ A .bat Script that will create your own custom RedM settings/system.xml file for
 
 How To Use:
 
-Download the gambify.bat, drag it inside a folder (Make Sure there are no Spaces in the Path! Currently doesnt work if Spaces in Path!) and run it. The rest is explained in the cmd.
+Copy the raw code from gambify.bat, create a txt file inside a folder (Make Sure there are no Spaces in the Path! Currently doesnt work if Spaces in Path!), change the fileextension to .bat and run it. The rest is explained in the cmd.
 
 It will copy your current config and manipulate it.
 
