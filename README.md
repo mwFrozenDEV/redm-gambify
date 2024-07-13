@@ -24,4 +24,8 @@ Show current configuration for the file paths. (Main Menu -> 4)
 
 Create a Shortcut on your Desktop and optionally in the Start Menu with a custom made logo. (Main Menu -> 5)
 
+Using the settings inside the Editor might double or tripple your FPS.
+
+My FPS difference:
+
 ![fpsdif](https://github.com/user-attachments/assets/260dc698-cd52-421a-b6e9-2cb30fd568bd)
