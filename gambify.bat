@@ -45,6 +45,7 @@ if not exist "%config%" (
     echo                   5. create desktop shortcut
     echo                   0. exit
     echo                   ============================================================================
+    set choice="nul"
     set /p choice="choose: "
         if "!choice!"=="1" goto create_custom_redm_config
         if "!choice!"=="2" goto swap_redm_config
@@ -112,16 +113,28 @@ if not exist "%config%" (
     echo \ 2. Disable grass
     echo \ 3. Up gamma / brightness
     echo \ 4. change display ratio \\ options displayed after selecting
+    echo \ 5. Disable Motion Blur
+    echo \ 6. Disable VSync \\ FrameCap
+    echo \ 7. Change refresh rate \\ manual input, detects current refreshrate
     echo \ 0. Back to menu
     echo \
     echo ===================================
     :choose_again
+    set choice="0"
     set /p choice="choose (1-4): "
         if "!choice!"=="1" goto change_settings_to_low
         if "!choice!"=="2" goto disable_grass
         if "!choice!"=="3" goto up_gamma
-        if "!choice!"=="4" goto change_display_ratio       
-        if "!choice!"=="0" ( goto main_menu ) else ( goto :config_editor )                    
+        if "!choice!"=="4" goto change_display_ratio   
+        if "!choice!"=="5" goto disable_motionblur
+        if "!choice!"=="6" goto disable_vsync
+        if "!choice!"=="7" goto change_refresh_rate    
+        if "!choice!"=="0" (
+            goto main_menu
+        ) else (
+            goto choose_again
+        )
+        goto :config_editor                  
 
     :change_settings_to_low
     set tempPSScript="%TEMP%\temp_script.ps1"
@@ -188,6 +201,52 @@ if not exist "%config%" (
     attrib +r "!exchange_folder_path!\%filename%"
     echo \ Successfully removed grass.
     goto :choose_again
+
+    :disable_motionblur
+    attrib -r "!exchange_folder_path!\%filename%"
+    set tempPSScript="%TEMP%\temp_script.ps1"
+    echo [XML]$xmlDoc = Get-Content -Path "!exchange_folder_path!\%filename%" > "!tempPSScript!"
+    echo $motionBlurNode = $xmlDoc.rage__fwuiSystemSettingsCollection.advancedGraphics.motionBlur >> "!tempPSScript!"
+    echo if ($motionBlurNode) { $motionBlurNode.value = 'false' } >> "!tempPSScript!"
+    echo $tripleBufferedNode = $xmlDoc.rage__fwuiSystemSettingsCollection.video.tripleBuffered >> "!tempPSScript!"
+    echo if ($tripleBufferedNode) { $tripleBufferedNode.value = 'false' } >> "!tempPSScript!"
+    echo $xmlDoc.Save("!exchange_folder_path!\%filename%") >> "!tempPSScript!"
+    powershell -ExecutionPolicy Bypass -File "!tempPSScript!"
+    del "!tempPSScript!"
+    attrib +r "!exchange_folder_path!\%filename%"
+    echo \ Successfully disabled motionblur.
+    goto :choose_again
+
+    :disable_vsync
+    attrib -r "!exchange_folder_path!\%filename%"
+    set tempPSScript="%TEMP%\temp_script.ps1"
+    echo [XML]$xmlDoc = Get-Content -Path "!exchange_folder_path!\%filename%" > "!tempPSScript!"
+    echo $vsyncNode = $xmlDoc.rage__fwuiSystemSettingsCollection.video.vSync >> "!tempPSScript!"
+    echo if ($vsyncNode) { $vsyncNode.value = '0' } >> "!tempPSScript!"
+    echo $xmlDoc.Save("!exchange_folder_path!\%filename%") >> "!tempPSScript!"
+    powershell -ExecutionPolicy Bypass -File "!tempPSScript!"
+    del "!tempPSScript!"
+    attrib +r "!exchange_folder_path!\%filename%"
+    echo \ Disabled vSync.
+    goto :choose_again
+
+    :change_refresh_rate
+    for /F "tokens=2 delims==" %%I in ('%SystemRoot%\System32\wbem\wmic.exe PATH Win32_VideoController GET CurrentRefreshRate /VALUE 2^>nul') do set "RefreshRate=%%I"
+    echo \ Maximum Refresh Rate detected for your PC: !RefreshRate!
+    :manual_input_refreshrate
+    set /p RefreshRate="\ input desired refresh rate // only numbers, otherwise breaks ur config: "
+    attrib -r "!exchange_folder_path!\%filename%"
+    set tempPSScript="%TEMP%\temp_script.ps1"
+    echo [XML]$xmlDoc = Get-Content -Path "!exchange_folder_path!\%filename%" > "!tempPSScript!"
+    echo $refreshRateNumeratorNode = $xmlDoc.rage__fwuiSystemSettingsCollection.video.refreshRateNumerator >> "!tempPSScript!"
+    echo if ($refreshRateNumeratorNode) { $refreshRateNumeratorNode.value = '!RefreshRate!' } >> "!tempPSScript!"
+    echo $xmlDoc.Save("!exchange_folder_path!\%filename%") >> "!tempPSScript!"
+    powershell -ExecutionPolicy Bypass -File "!tempPSScript!"
+    del "!tempPSScript!"
+    attrib +r "!exchange_folder_path!\%filename%"
+    echo \ changed refresh rate
+    goto :choose_again
+
 
     :up_gamma
     attrib -r "!exchange_folder_path!\%filename%"
