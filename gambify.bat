@@ -99,6 +99,8 @@ if not exist "%config%" (
 
     :config_editor
     cls
+    findstr /C:"<^!--Alternative Config-->" !exchange_folder_path!\%filename% >Nul
+    if %errorlevel%==0 (
     echo    _______  ______________  ___ 
     echo   / __/ _ \/  _/_  __/ __ \/ _ \
     echo  / _// // // /  / / / /_/ / , _/
@@ -135,7 +137,18 @@ if not exist "%config%" (
             goto choose_again
         )
         goto :config_editor                  
-
+    ) else (
+        cls
+        color 40
+        echo \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        echo \ 
+        echo \ Error. You are trying to edit your main config. 
+        echo \         Please swap and then try again.
+        echo \                                                            
+        echo \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        pause
+        goto :main_menu
+    )
     :change_settings_to_low
     set tempPSScript="%TEMP%\temp_script.ps1"
     attrib -r "!exchange_folder_path!\%filename%"
